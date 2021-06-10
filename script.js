@@ -6,7 +6,7 @@ $(document).ready(function(){
         }else{
             $('.navbar').removeClass("sticky");
         }
-        
+
         // scroll-up button show/hide script
         if(this.scrollY > 500){
             $('.scroll-up-btn').addClass("show");
@@ -35,14 +35,14 @@ $(document).ready(function(){
 
     // typing text animation script
     var typed = new Typed(".typing", {
-        strings: ["YouTuber", "Developer", "Blogger", "Designer", "Freelancer"],
+        strings: ["Cybersecurity expert", "Web Developer", "Blogger", "Designer", "Freelancer"],
         typeSpeed: 100,
         backSpeed: 60,
         loop: true
     });
 
     var typed = new Typed(".typing-2", {
-        strings: ["YouTuber", "Developer", "Blogger", "Designer", "Freelancer"],
+        strings: ["Cybersecurity expert", "Web Developer", "Blogger", "Web Designer", "Freelancer"],
         typeSpeed: 100,
         backSpeed: 60,
         loop: true
@@ -68,5 +68,44 @@ $(document).ready(function(){
                 nav: false
             }
         }
+    });
+
+    $('.contact-form').submit((e)=>{
+        e.preventDefault(); //preventing from submitting form
+    });
+
+    $('.send-msg').click(()=>{
+        $fullname = $('.fullname').val();
+        $email = $('.email-input').val();
+        $subject = $('.subject').val();
+        $message = $('.message').val();
+        $('.send-msg').text("Sending...");
+        $('.contact-form').addClass("disable");
+
+        $.ajax({
+            url: "message.php",
+            type: "POST",
+            data: "email="+$email+"&subject="+$subject+"&message="+$message,
+            success: function(data){
+                $errorBox = $('.error-box');
+                $('.send-msg').text("Send message");
+                $('.contact-form').removeClass("disable");
+                if(data == "success"){
+                    $fullname = $('.fullname').val("");
+                    $email = $('.email-input').val("");
+                    $subject = $('.subject').val("");
+                    $message = $('.message').val("");
+                    $errorBox.html("Your message has been sent!");
+                    $errorBox.addClass("success");
+                    setTimeout(()=>{
+                        $errorBox.html("");
+                        $errorBox.removeClass("success");
+                    }, 5000);
+                }else{
+                    $errorBox.removeClass("success");
+                    $errorBox.html("<span>* </span>" + data);
+                }
+            }
+        });
     });
 });
